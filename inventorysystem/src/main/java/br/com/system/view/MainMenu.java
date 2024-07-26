@@ -2995,6 +2995,11 @@ public class MainMenu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Quantidade do item inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (itemQuantity == 0) {
+            JOptionPane.showMessageDialog(this, "A quantidade do item não pode ser 0.");
+            return;
+        }
 
         double totalValue = unitPrice * itemQuantity;
 
@@ -3077,10 +3082,15 @@ public class MainMenu extends javax.swing.JFrame {
             for (int i = 0; i < saleItemsRowCount; i++) {
                 int productId = (int) saleItemsTable.getValueAt(i, 0);
                 double unitValue = (Double) saleItemsTable.getValueAt(i, 2);
-                int quantity = (int) saleItemsTable.getValueAt(i, 3);
-
+                int itemQuantity = (int) saleItemsTable.getValueAt(i, 3);
+                
                 Product product = productDAO.findById(productId);
-                SaleItem saleItem = new SaleItem(product, unitValue, quantity);
+                int stockQuantity = product.getQuantity();
+                
+                int newQuantity = stockQuantity - itemQuantity;
+                productDAO.updateStock(productId, newQuantity);
+                
+                SaleItem saleItem = new SaleItem(product, unitValue, itemQuantity);
                 saleItems.add(saleItem);
             }
 

@@ -42,6 +42,21 @@ public class ProductDAO implements GenericDAO<Product, Integer> {
             System.out.println("Erro ao atualizar produto: " + e.getMessage());
         }
     }
+    
+    public void updateStock(int id, int quantity) {
+        String sql = "UPDATE products SET quantity = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
+            stmt.setInt(1, quantity);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar quantidade do produto: " + e.getMessage());
+        }
+    }
+    
+    
 
     @Override
     public void delete(Integer id) {
